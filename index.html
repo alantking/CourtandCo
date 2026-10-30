@@ -20,38 +20,47 @@
       border: 1px solid rgba(226, 219, 206, 0.6);
       box-shadow: 0 10px 25px -5px rgba(112, 130, 56, 0.05);
     }
+    .purplish-pink-btn {
+      background: linear-gradient(135deg, #fbcfe8 0%, #e9d5ff 50%, #c7d2fe 100%);
+      color: #4c1d95;
+      border: 1px solid rgba(216, 180, 254, 0.6);
+    }
+    .purplish-pink-btn:hover {
+      background: linear-gradient(135deg, #f472b6 0%, #c084fc 50%, #818cf8 100%);
+      color: #ffffff;
+    }
   </style>
 </head>
 <body class="min-h-screen py-8 px-4 sm:px-6">
 
   <div class="max-w-md mx-auto">
     
-    <!-- Header -->
-    <header class="text-center mb-8">
-      <div class="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-gradient-to-tr from-pink-100 via-purple-100 to-blue-100 shadow-inner mb-3 text-2xl border border-white">
+    <!-- Header with Scale Logo Beside Title -->
+    <header class="flex items-center justify-center gap-3 mb-8">
+      <div class="inline-flex items-center justify-center w-12 h-12 rounded-2xl bg-gradient-to-tr from-pink-200 via-purple-200 to-indigo-200 shadow-inner text-xl border border-white shrink-0">
         ⚖️
       </div>
       <h1 class="serif-title text-3xl font-bold tracking-tight text-[#2C352E]">Court & Co</h1>
-      <p class="text-xs uppercase tracking-widest text-emerald-700 font-semibold mt-1">Cozy Mobile Space</p>
     </header>
 
     <!-- Note Input Form -->
     <div class="pastel-card rounded-2xl p-5 mb-6">
       <form id="note-form" class="space-y-3">
-        <textarea id="note-input" rows="3" placeholder="What's on your mind? (Tea, Popcorn, Story, Music, Lunch...)" required class="w-full p-3 text-sm rounded-xl border border-[#E2DBCE] bg-[#FAF7F2]/50 focus:outline-none focus:ring-2 focus:ring-emerald-600/30 resize-none"></textarea>
+        <textarea id="note-input" rows="3" placeholder="What's on your mind? (Tea, Popcorn, Books, Music, Lunch...)" required class="w-full p-3 text-sm rounded-xl border border-[#E2DBCE] bg-[#FAF7F2]/50 focus:outline-none focus:ring-2 focus:ring-purple-300 resize-none"></textarea>
         
         <div class="flex items-center justify-between gap-2 flex-wrap">
           <select id="category-select" class="text-xs font-medium py-2 px-3 rounded-lg border border-[#E2DBCE] bg-[#FAF7F2] text-[#2C352E] focus:outline-none">
             <option value="Tea 🍵">Tea 🍵</option>
             <option value="Popcorn 🍿">Popcorn 🍿</option>
-            <option value="Story 📖">Story 📖</option>
+            <option value="Books 📖">Books 📖</option>
             <option value="Music 🎵">Music 🎵</option>
             <option value="Lunch 🌭">Lunch 🌭</option>
             <option value="Libra ⚖️">Libra ⚖️</option>
             <option value="Dogs 🐶">Dogs 🐶</option>
           </select>
 
-          <button type="submit" class="bg-[#708238] hover:bg-[#5f6f30] text-white text-xs font-semibold px-4 py-2.5 rounded-xl shadow-sm transition-all active:scale-95">
+          <!-- Purplish Pink Add Note Button -->
+          <button type="submit" class="purplish-pink-btn text-xs font-semibold px-4 py-2.5 rounded-xl shadow-sm transition-all active:scale-95">
             Add Note ✨
           </button>
         </div>
@@ -60,15 +69,15 @@
 
     <!-- Filter Bar -->
     <div class="flex gap-2 overflow-x-auto pb-2 mb-4 scrollbar-none text-xs">
-      <button onclick="filterNotes('All')" class="filter-btn active-filter whitespace-nowrap px-3 py-1.5 rounded-full font-medium bg-[#708238] text-white transition">All</button>
+      <button onclick="filterNotes('All')" class="filter-btn active-filter whitespace-nowrap px-3.5 py-1.5 rounded-full font-semibold purplish-pink-btn transition">All</button>
       <button onclick="filterNotes('Tea 🍵')" class="filter-btn whitespace-nowrap px-3 py-1.5 rounded-full font-medium bg-emerald-50 text-emerald-800 border border-emerald-200 transition">Tea 🍵</button>
       <button onclick="filterNotes('Popcorn 🍿')" class="filter-btn whitespace-nowrap px-3 py-1.5 rounded-full font-medium bg-amber-50 text-amber-800 border border-amber-200 transition">Popcorn 🍿</button>
-      <button onclick="filterNotes('Story 📖')" class="filter-btn whitespace-nowrap px-3 py-1.5 rounded-full font-medium bg-purple-50 text-purple-800 border border-purple-200 transition">Story 📖</button>
+      <button onclick="filterNotes('Books 📖')" class="filter-btn whitespace-nowrap px-3 py-1.5 rounded-full font-medium bg-purple-50 text-purple-800 border border-purple-200 transition">Books 📖</button>
       <button onclick="filterNotes('Music 🎵')" class="filter-btn whitespace-nowrap px-3 py-1.5 rounded-full font-medium bg-blue-50 text-blue-800 border border-blue-200 transition">Music 🎵</button>
       <button onclick="filterNotes('Lunch 🌭')" class="filter-btn whitespace-nowrap px-3 py-1.5 rounded-full font-medium bg-pink-50 text-pink-800 border border-pink-200 transition">Lunch 🌭</button>
     </div>
 
-    <!-- Notes List Container (1 card per row) -->
+    <!-- Notes List Container -->
     <div id="notes-container" class="space-y-3">
       <!-- Dynamic notes loaded here -->
     </div>
@@ -80,8 +89,8 @@
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
     import { getDatabase, ref, push, onValue, remove, update } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 
-    // 🔑 REPLACE WITH YOUR FIREBASE CONFIG FROM STEP 1
-   const firebaseConfig = {
+    // 🔑 REPLACE WITH YOUR FIREBASE CONFIG
+const firebaseConfig = {
   apiKey: "AIzaSyAeJ_b5nYWDwbMscjz6gqDpIOG6ZHn7x9Y",
   authDomain: "notes-fa406.firebaseapp.com",
   databaseURL: "https://notes-fa406-default-rtdb.firebaseio.com",
@@ -108,7 +117,7 @@
     const categoryStyles = {
       'Tea 🍵': 'bg-emerald-50 text-emerald-800 border-emerald-200',
       'Popcorn 🍿': 'bg-amber-50 text-amber-800 border-amber-200',
-      'Story 📖': 'bg-purple-50 text-purple-800 border-purple-200',
+      'Books 📖': 'bg-purple-50 text-purple-800 border-purple-200',
       'Music 🎵': 'bg-blue-50 text-blue-800 border-blue-200',
       'Lunch 🌭': 'bg-pink-50 text-pink-800 border-pink-200',
       'Libra ⚖️': 'bg-indigo-50 text-indigo-800 border-indigo-200',
@@ -172,7 +181,7 @@
             <p class="text-sm text-[#2C352E] whitespace-pre-wrap mb-4">${escapeHtml(note.text)}</p>
           </div>
           <div class="flex items-center justify-end gap-2 pt-2 border-t border-stone-100">
-            <button onclick="editNote('${id}', '${escapeJs(note.text)}')" class="text-xs text-stone-500 hover:text-emerald-700 font-medium px-2 py-1 rounded">Edit</button>
+            <button onclick="editNote('${id}', '${escapeJs(note.text)}')" class="text-xs text-stone-500 hover:text-purple-700 font-medium px-2 py-1 rounded">Edit</button>
             <button onclick="deleteNote('${id}')" class="text-xs text-rose-500 hover:text-rose-700 font-medium px-2 py-1 rounded">Delete</button>
           </div>
         `;
@@ -192,9 +201,10 @@
     window.filterNotes = (category) => {
       currentFilter = category;
       document.querySelectorAll('.filter-btn').forEach(btn => {
-        btn.classList.remove('bg-[#708238]', 'text-white');
+        btn.classList.remove('purplish-pink-btn', 'font-semibold');
+        btn.classList.add('font-medium');
         if (btn.textContent.includes(category) || (category === 'All' && btn.textContent === 'All')) {
-          btn.classList.add('bg-[#708238]', 'text-white');
+          btn.classList.add('purplish-pink-btn', 'font-semibold');
         }
       });
       renderNotes();
